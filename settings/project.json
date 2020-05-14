@@ -7,6 +7,7 @@
       false,
       false,
       true,
+      true,
       true
     ],
     [
@@ -17,6 +18,13 @@
     [
       false,
       true,
+      false,
+      false
+    ],
+    [
+      false,
+      true,
+      false,
       false,
       false
     ]
@@ -30,7 +38,8 @@
     "default",
     "hero",
     "wall",
-    "smog"
+    "smog",
+    "pickable"
   ],
   "start-scene": "2d2f792f-a40c-49bb-a189-ed176a246e49",
   "design-resolution-width": 960,
