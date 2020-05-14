@@ -1,5 +1,5 @@
 
-import { Direction } from './Consts'
+import { Direction } from './libs/consts'
 
 const { ccclass, property } = cc._decorator
 
@@ -95,6 +95,13 @@ export default class Hero extends cc.Component {
   onCollisionExit(other: cc.BoxCollider, self: cc.CircleCollider): void {
     if (other.node.group === 'smog') {
       other.node.getComponent(cc.TiledTile).gid = 79
+    }
+  }
+
+  onBeginContact(contact: cc.PhysicsContact, self: cc.PhysicsBoxCollider, other: cc.PhysicsBoxCollider) {
+    console.log(contact, other, self)
+    if (other.node.group === 'pickable') {
+      console.log(other.node)
     }
   }
 }
