@@ -2,7 +2,7 @@
 cocos game
 
 ## Demo
-[Play online](https://littlegauze.github.io/dungeons/build/web-mobile/)
+[Play online](https://littlegauze.github.io/dungeons/build/web-desktop/)
 
 ## How to Play
  Use [W,S,A,D] or [Up, Down, Left, Right] key to nav the character to collect the coin.
