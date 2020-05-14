@@ -21,7 +21,11 @@
       false
     ]
   ],
-  "excluded-modules": [],
+  "excluded-modules": [
+    "3D Physics/cannon.js",
+    "3D Physics/Builtin",
+    "3D Particle"
+  ],
   "group-list": [
     "default",
     "hero",
@@ -40,7 +44,7 @@
     "height": 640,
     "width": 960
   },
-  "last-module-event-record-time": 0,
+  "last-module-event-record-time": 1589377749142,
   "assets-sort-type": "name",
   "facebook": {
     "appID": "",
@@ -51,5 +55,6 @@
     "live": {
       "enable": false
     }
-  }
+  },
+  "migrate-history": []
 }

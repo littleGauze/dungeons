@@ -17,15 +17,16 @@ export default class Game extends cc.Component {
     collistionManager.enabled = true
 
     const map: MapData = [
-      [ '00000', '01000', '00000' ],
-      [ '00010', '11110', '00100' ],
-      [ '00000', '10000', '00000' ]
+      ['00000', '01000', '00000'],
+      ['00010', '11110', '00100'],
+      ['00000', '10000', '00000']
     ]
 
     this._loadMap(map)
   }
 
   private _initMap(): void {
+    console.log(this.mapNode.children)
     for (let node of this.mapNode.children) {
       const map: cc.TiledMap = node.getComponent(cc.TiledMap)
       const tileSize: cc.Size = map.getTileSize()
@@ -59,37 +60,40 @@ export default class Game extends cc.Component {
 
   private _loadMap(map: MapData): void {
     let cnt: number = 0
-    let starPoint: { i: number, j: number  } = null
+    let starPoint: { i: number, j: number } = null
     for (let i = 0, rowLen = map.length; i < rowLen; i++) {
-      for (let j = 0, colLen = map[i].length; i < colLen; j++) {
+      for (let j = 0, colLen = map[i].length; j < colLen; j++) {
         const mapName: string = map[i][j]
         if (!mapName || mapName === '00000') continue
+        if (!starPoint) {
+          starPoint = { i, j }
+        }
 
         // load map
         cnt++
-        cc.loader.loadRes(`map/${mapName}`, cc.TiledMapAsset, (err, assets: cc.TiledMapAsset) => {
-          if (err) {
-            console.error(`load map ${mapName} error: `, err)
-            throw err
+        const self = this
+        cc.loader.loadRes(`map/${mapName}`, cc.TiledMapAsset, function (i: number, j: number) {
+          return (err, assets: cc.TiledMapAsset) => {
+            if (err) {
+              console.error(`load map ${mapName} error: `, err)
+              throw err
+            }
+  
+            const node: cc.Node = new cc.Node(`map${i}${j}`)
+            const map: cc.TiledMap = node.addComponent(cc.TiledMap)
+            map.tmxAsset = assets
+            const smogLayer: cc.TiledLayer = map.getLayer('smog')
+            self.mapNode.addChild(node)
+            smogLayer.node.active = true
+            node.anchorX = node.anchorY = 0
+            node.x = (j - starPoint.j) * 384
+            node.y = -(i - starPoint.i) * 384
+  
+            if (--cnt <= 0) {
+              self._initMap()
+            }
           }
-
-          if (!starPoint) {
-            starPoint = { i, j }
-          }
-
-          const node: cc.Node = new cc.Node(`map${i}${j}`)
-          node.x = (j - starPoint.j) * 384
-          node.y = -(i - starPoint.i) * 384
-
-          const map: cc.TiledMap = node.addComponent(cc.TiledMap)
-          map.tmxAsset = assets
-          node.anchorX = node.anchorY = 0
-          this.mapNode.addChild(node)
-
-          if (--cnt <= 0) {
-            this._initMap()
-          }
-        })
+        }(i, j))
       }
     }
   }
