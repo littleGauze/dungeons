@@ -1,10 +1,14 @@
 
 import { Direction } from './libs/consts'
+import Game from './Game'
 
 const { ccclass, property } = cc._decorator
 
 @ccclass
 export default class Hero extends cc.Component {
+
+  @property(Game)
+  private game: Game = null
 
   private _amin: cc.Animation = null
   private _speed: number = 15000
@@ -12,6 +16,7 @@ export default class Hero extends cc.Component {
   private _bias: cc.Vec2 = cc.v2(0, 0)
   private _lv: cc.Vec2 = null
   private _rigidBody: cc.RigidBody = null
+  private _speedUp: number = 1
 
   onLoad() {
     this._rigidBody = this.getComponent(cc.RigidBody)
@@ -81,9 +86,13 @@ export default class Hero extends cc.Component {
     }
 
     this._rigidBody.linearVelocity = cc.v2(
-      this._bias.x * this._speed * dt,
-      this._bias.y * this._speed * dt
+      this._bias.x * this._speed * dt * this._speedUp,
+      this._bias.y * this._speed * dt * this._speedUp
     )
+  }
+
+  public setSpeedUp(ratio: number): void {
+    this._speedUp = ratio
   }
 
   onCollisionEnter(other: cc.BoxCollider, self: cc.CircleCollider): void {
@@ -99,9 +108,14 @@ export default class Hero extends cc.Component {
   }
 
   onBeginContact(contact: cc.PhysicsContact, self: cc.PhysicsBoxCollider, other: cc.PhysicsBoxCollider) {
-    console.log(contact, other, self)
     if (other.node.group === 'pickable') {
-      console.log(other.node)
+      if (other.node.name === 'coin') {
+        this.game.incCoin()
+      } else if (other.node.name === 'speedUp') {
+        this.game.speedUp()
+      }
+      other.node.active = false
+      other.node.destroy()
     }
   }
 }
